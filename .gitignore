@@ -1,0 +1,11 @@
+# Allowlist: ignore everything, then re-include only what belongs in the repo.
+/*
+!/.gitignore
+!/README.md
+!/site/
+!/originals/
+!/_tools/
+/_tools/node_modules/
+/_tools/package-lock.json
+# scratch captures (raw Wix HTML/JSON, screenshots) stay local
+/_raw/
