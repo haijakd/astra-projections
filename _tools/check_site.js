@@ -5,7 +5,9 @@ const ROOT = path.resolve(process.argv[2]), OUT = path.resolve(process.argv[3]);
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.pdf': 'application/pdf', '.woff2': 'font/woff2' };
 const srv = http.createServer((q, r) => {
   const p = path.join(ROOT, decodeURIComponent(q.url.split('?')[0].split('#')[0]) === '/' ? 'index.html' : decodeURIComponent(q.url.split('?')[0]));
-  fs.readFile(p, (e, b) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'Content-Type': TYPES[path.extname(p)] || 'application/octet-stream' }); r.end(b); } });
+  // like Cloudflare Pages: /services serves services.html
+  const file = path.extname(p) ? p : p + '.html';
+  fs.readFile(file, (e, b) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream' }); r.end(b); } });
 }).listen(8765);
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
