@@ -178,7 +178,7 @@ body.contact { background-image: url("../img/bg-blue-streaks.jpg"); }
   .band { letter-spacing: 5px; font-size: 15px; }
 }
 @media (max-width: 760px) {
-  .site-header .inner { padding: 0 8px; flex-wrap: nowrap; min-height: 48px; }
+  .site-header .inner { padding: 0 4px 0 12px; flex-wrap: nowrap; min-height: 48px; }
   .site-header nav { flex-wrap: nowrap; }
   .site-header nav a { margin-right: 12px; font-size: 13px; white-space: nowrap; }
   .social { gap: 0; }
@@ -197,6 +197,7 @@ body.contact { background-image: url("../img/bg-blue-streaks.jpg"); }
   .clients .grid { grid-template-columns: repeat(3, 1fr); }
   .lead { font-size: 25px; }
   .contact-hero h1 { font-size: 21px; }
+  .contact-hero h1 br { display: none; }
   .contact-hero .sub { font-size: 17px; }
   /* phone: thumb-sized fields and a darker, more opaque teal so white placeholders keep contrast */
   form.quote input, form.quote button { min-height: 44px; }
