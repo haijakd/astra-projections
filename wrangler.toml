@@ -1,0 +1,16 @@
+# Pages project config. Deploy from this folder: npx wrangler pages deploy
+name = "astra-projections"
+pages_build_output_dir = "./site"
+compatibility_date = "2026-11-28"
+
+# Contact and quote form messages (functions/api/contact.js). Read them with _tools\messages.ps1
+[[d1_databases]]
+binding = "DB"
+database_name = "astra-contact"
+database_id = "3b348e7b-8322-46b9-b800-515b222923fe"
+migrations_dir = "migrations"
+
+# Emails each message via the astra-mailer Worker (mailer/). Deploy that first.
+[[services]]
+binding = "MAILER"
+service = "astra-mailer"

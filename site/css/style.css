@@ -159,6 +159,11 @@ form.quote ::placeholder { color: #fff; opacity: 1; }
 form.quote button { justify-self: end; border: 0; background: var(--field); color: #fff; font: inherit; font-size: 16px; padding: 8px 14px; min-height: 40px; cursor: pointer; margin-top: 6px; }
 form.quote button:hover { background: var(--accent); }
 form.quote .status { min-height: 1.2em; font-size: 15px; margin: 4px 0 0; }
+form.quote .status.err { color: #ffd2d2; }
+form.quote button:disabled { opacity: 0.6; cursor: wait; }
+form.quote input:focus-visible, form.quote textarea:focus-visible, form.quote button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* bot trap: off-screen, never shown to people or screen readers */
+form.quote .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 /* contact */
 body.contact { background-image: url("../img/bg-blue-streaks.jpg"); }

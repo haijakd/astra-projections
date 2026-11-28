@@ -1,0 +1,14 @@
+# Worker that emails Astra contact and quote form messages. Deploy from this folder: npx wrangler deploy
+name = "astra-mailer"
+main = "src/index.js"
+compatibility_date = "2026-11-28"
+workers_dev = false
+preview_urls = false
+
+# Locked to one verified Email Routing destination: it can only ever mail the owner.
+[[send_email]]
+name = "MAIL"
+destination_address = "john.j.vaughan@gmail.com"
+
+[vars]
+OWNER = "john.j.vaughan@gmail.com"

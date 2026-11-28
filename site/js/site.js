@@ -1,10 +1,6 @@
 // Astra Projections - slideshow + form handling (no dependencies)
-
-// FORM DELIVERY: the Wix forms do not work off Wix. Set ONE of these to make the forms deliver.
-//  - FORM_ENDPOINT: a free form backend URL (e.g. https://formspree.io/f/XXXX or https://formsubmit.co/ajax/you@domain)
-//  - CONTACT_EMAIL: fallback that opens the visitor's email app with the message filled in
-const FORM_ENDPOINT = "";
-const CONTACT_EMAIL = "";
+// Forms post to /api/contact (functions/api/contact.js), which saves to D1 and emails the owner.
+// Without JavaScript they still post, and the function redirects back with ?sent=1 or ?error=1.
 
 (function slideshow() {
   const hero = document.querySelector(".hero");
@@ -33,31 +29,29 @@ const CONTACT_EMAIL = "";
   show(0); restart();
 })();
 
+const SENT = "Thanks, your message was sent. We'll get back to you soon.";
+const q = new URLSearchParams(location.search);
 document.querySelectorAll("form.quote").forEach((form) => {
+  const status = form.querySelector(".status");
+  const button = form.querySelector('button[type="submit"]');
+  const show = (text, ok) => { status.textContent = text; status.className = "status " + (ok ? "ok" : "err"); };
+  if (q.has("sent")) show(SENT, true);
+  if (q.has("error")) show("Something in the form needs fixing. Please check it and try again.", false);
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const status = form.querySelector(".status");
-    const data = Object.fromEntries(new FormData(form));
-    data._subject = "Astra Projections website: " + (form.dataset.kind || "message");
-    if (FORM_ENDPOINT) {
-      try {
-        const r = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(data),
-        });
-        status.textContent = r.ok ? "Thanks, your message was sent." : "Sending failed, please try again.";
-        if (r.ok) form.reset();
-      } catch (err) {
-        status.textContent = "Sending failed, please try again.";
-      }
-      return;
+    if (!form.reportValidity()) return;
+    button.disabled = true;
+    show("Sending...", true);
+    try {
+      const r = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+      const out = await r.json().catch(() => ({}));
+      if (r.ok && out.ok) { form.reset(); show(SENT, true); }
+      else show(out.error || "The message could not be sent. Please try again.", false);
+    } catch (err) {
+      show("No connection. Please check your internet and try again.", false);
+    } finally {
+      button.disabled = false;
     }
-    if (CONTACT_EMAIL) {
-      const body = Object.entries(data).filter(([k]) => k !== "_subject").map(([k, v]) => k + ": " + v).join("\n");
-      location.href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(data._subject) + "&body=" + encodeURIComponent(body);
-      return;
-    }
-    status.textContent = "This form is not connected yet. Please reach us on Facebook or LinkedIn.";
   });
 });

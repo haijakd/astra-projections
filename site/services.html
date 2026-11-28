@@ -44,13 +44,15 @@
     <div id="quote" class="quote-intro">
       <p style="margin:0">SONY Projector Rentals<br>Let us know about your next event.</p>
       <h2>REQUEST A QUOTE</h2>
-      <form class="quote" data-kind="quote request">
-        <input name="name" placeholder="Name *" required aria-label="Name">
-        <input name="email" type="email" placeholder="Email *" required aria-label="Email">
-        <input name="phone" type="tel" placeholder="Phone" aria-label="Phone">
-        <input name="package" placeholder="Package" aria-label="Package">
-        <input name="event" placeholder="Event" aria-label="Event">
-        <textarea name="details" placeholder="Project Details" aria-label="Project Details"></textarea>
+      <form class="quote" action="/api/contact" method="post">
+        <input type="hidden" name="kind" value="quote">
+        <div class="hp" aria-hidden="true"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <input name="name" placeholder="Name *" required aria-label="Name" maxlength="100" autocomplete="name">
+        <input name="email" type="email" placeholder="Email *" required aria-label="Email" maxlength="254" autocomplete="email">
+        <input name="phone" type="tel" placeholder="Phone" aria-label="Phone" maxlength="40" autocomplete="tel">
+        <input name="package" placeholder="Package" aria-label="Package" maxlength="100">
+        <input name="event" placeholder="Event" aria-label="Event" maxlength="150">
+        <textarea name="details" placeholder="Project Details *" required aria-label="Project Details" maxlength="5000"></textarea>
         <button type="submit">Send</button>
         <p class="status" role="status"></p>
       </form>

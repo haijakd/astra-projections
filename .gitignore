@@ -3,10 +3,16 @@
 !/.gitignore
 !/README.md
 !/DOMAIN_SWITCH.md
+!/wrangler.toml
 !/site/
 !/originals/
 !/_tools/
+!/functions/
+!/migrations/
+!/mailer/
 /_tools/node_modules/
 /_tools/package-lock.json
+# wrangler caches and local dev state
+.wrangler/
 # scratch captures (raw Wix HTML/JSON, screenshots) stay local
 /_raw/

@@ -7,7 +7,11 @@ Static rebuild of astraprojections.com (originally a Wix site), with no Wix code
 - `_tools/` - the scripts used to rip, organise and check the site (`check_site.js` serves `site/` locally and tests every page).
 
 ## Forms
-The Wix forms do not work off Wix. Open `site/js/site.js` and set either `FORM_ENDPOINT` (a free form service such as Formspree) or `CONTACT_EMAIL` (opens the visitor's mail app).
+The contact form (`/contact`) and the quote form (`/services`) post to `/api/contact` (`functions/api/contact.js`).
+It validates, saves every message to the D1 database `astra-contact`, then emails it through the private
+`astra-mailer` Worker (`mailer/`), which can only send to the owner's verified Email Routing address.
+Read saved messages with `powershell -File _tools\messages.ps1`.
 
 ## Hosting
-Cloudflare Pages or GitHub Pages, with `site` as the output / publish directory and no build command.
+Cloudflare Pages project `astra-projections` (the form needs Pages Functions, so GitHub Pages can no longer host it).
+Deploy the mailer first (`cd mailer && npx wrangler deploy`), then the site (`npx wrangler pages deploy`).
