@@ -2,7 +2,7 @@
 const { chromium } = require('playwright-core');
 const http = require('http'), fs = require('fs'), path = require('path');
 const ROOT = path.resolve(process.argv[2]), OUT = path.resolve(process.argv[3]);
-const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.pdf': 'application/pdf' };
+const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.pdf': 'application/pdf', '.woff2': 'font/woff2' };
 const srv = http.createServer((q, r) => {
   const p = path.join(ROOT, decodeURIComponent(q.url.split('?')[0].split('#')[0]) === '/' ? 'index.html' : decodeURIComponent(q.url.split('?')[0]));
   fs.readFile(p, (e, b) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'Content-Type': TYPES[path.extname(p)] || 'application/octet-stream' }); r.end(b); } });
@@ -10,7 +10,7 @@ const srv = http.createServer((q, r) => {
 (async () => {
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
   let bad = 0;
-  for (const [vw, tag] of [[1440, 'desk'], [390, 'mobile']]) {
+  for (const [vw, tag] of [[1440, 'desk'], [820, 'tablet'], [390, 'mobile']]) {
     const ctx = await browser.newContext({ viewport: { width: vw, height: 900 } });
     for (const pg of ['index.html', 'services.html', 'contact.html']) {
       const page = await ctx.newPage();
@@ -24,6 +24,12 @@ const srv = http.createServer((q, r) => {
       errs.push(...broken.map(b => 'IMG ' + b));
       const wix = (await page.content()).match(/wix(static|site)|parastorage/gi);
       if (wix) errs.push('WIX refs: ' + wix.length);
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      if (over > 0) errs.push('OVERFLOW x ' + over + 'px');
+      const hdr = await page.evaluate(() => Math.round(document.querySelector('.site-header').getBoundingClientRect().height));
+      if (hdr > 60) errs.push('HEADER tall ' + hdr + 'px');
+      const fontOk = await page.evaluate(async () => { await document.fonts.ready; return document.fonts.check('300 16px Barlow'); });
+      if (!fontOk) errs.push('FONT Barlow not loaded');
       await page.screenshot({ path: path.join(OUT, `check_${tag}_${pg.replace('.html', '')}.png`), fullPage: true });
       console.log(tag, pg, errs.length ? errs : 'OK');
       bad += errs.length;
