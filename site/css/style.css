@@ -159,6 +159,8 @@ form.quote ::placeholder { color: #fff; opacity: 1; }
 form.quote button { justify-self: end; border: 0; background: var(--field); color: #fff; font: inherit; font-size: 16px; padding: 8px 14px; min-height: 40px; cursor: pointer; margin-top: 6px; }
 form.quote button:hover { background: var(--accent); }
 form.quote .status { min-height: 1.2em; font-size: 15px; margin: 4px 0 0; }
+/* dark backing so the result stays readable over the bright streak backgrounds */
+form.quote .status:not(:empty) { background: rgba(0, 0, 0, 0.62); padding: 6px 10px; text-shadow: 0 1px 2px #000; }
 form.quote .status.err { color: #ffd2d2; }
 form.quote button:disabled { opacity: 0.6; cursor: wait; }
 form.quote input:focus-visible, form.quote textarea:focus-visible, form.quote button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
